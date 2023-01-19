@@ -1,19 +1,12 @@
 import { TextareaHTMLAttributes } from 'react'
 
-interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-  label: string
-}
+interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {}
 
-export function TextArea({ label }: TextAreaProps) {
+export function TextArea({ ...rest }: TextAreaProps) {
   return (
-    <div className="flex flex-col gap-2 h-max">
-      <label htmlFor={label} className="text-slate-200">
-        {label}
-      </label>
-      <textarea
-        id={label}
-        className="text-slate-100 rounded-md bg-slate-700 p-2 border-2 border-slate-600 outline-none hover:border-teal-500/50 focus:border-teal-500 transition-all"
-      />
-    </div>
+    <textarea
+      className="text-slate-100 w-full rounded-md bg-slate-900 border-2 border-slate-700 p-2 placeholder:text-slate-400 text-lg outline-none hover:border-teal-500/50 focus:border-teal-500 transition-all"
+      {...rest}
+    />
   )
 }

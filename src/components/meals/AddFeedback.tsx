@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import { Button } from '../Button'
+import { Input } from '../Input'
+import { TextArea } from '../TextArea'
 
 export function AddFeedback() {
   return (
@@ -10,23 +12,8 @@ export function AddFeedback() {
     >
       <h3 className="text-lg font-bold text-slate-200">Adicionar avaliação</h3>
       <div className="flex flex-col gap-4">
-        <div className="rounded-md text-slate-300">
-          <label htmlFor="note" className="text-md">
-            Nota:
-          </label>
-          <input
-            type="number"
-            id="note"
-            className="bg-slate-900  border-2 border-transparent outline-none mt-1 rounded-md focus:border-teal-400 p-2"
-          />
-        </div>
-        <div className="rounded-md text-slate-300">
-          <label htmlFor="message">Mensagem:</label>
-          <textarea
-            id="message"
-            className="bg-slate-900  border-2 border-transparent outline-none mt-1 rounded-md focus:border-teal-400 w-full p-2"
-          />
-        </div>
+        <Input placeholder="Nota" />
+        <TextArea placeholder="Mensagem" />
         <Button>Adicionar</Button>
       </div>
     </motion.div>
