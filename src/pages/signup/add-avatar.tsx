@@ -1,13 +1,43 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/router'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 import { Button } from '../../components/Button'
 import { Input } from '../../components/Input'
 import { MultiStep } from '../../components/MultiStep'
+import { localStorageConfig } from '../../config/localStorage'
+import { api } from '../../lib/axios'
+
+const addAvatarFormSchema = z.object({
+  avatar: z.any(),
+})
+
+type AddAvatarFormData = z.infer<typeof addAvatarFormSchema>
 
 export default function AddAvatar() {
+  const { register, handleSubmit } = useForm<AddAvatarFormData>({
+    resolver: zodResolver(addAvatarFormSchema),
+  })
+
   const router = useRouter()
 
-  async function handleNextStep() {
-    await router.push('/doctor/pedrodavila')
+  async function handleAddAvatar(formData: AddAvatarFormData) {
+    const doctorId = localStorage.getItem(localStorageConfig.doctorIdKey)
+
+    if (!doctorId) {
+      await router.push('/signup')
+    }
+
+    const { data } = await api.patch(
+      '/doctors/add-avatar',
+      { file: formData.avatar[0] },
+      {
+        params: { doctorId },
+        headers: { 'Content-Type': 'multipart/form-data' },
+      },
+    )
+
+    await router.push(`/doctor/${data.content.username}`)
   }
 
   return (
@@ -29,9 +59,9 @@ export default function AddAvatar() {
           </h3>
 
           <div className="flex flex-col gap-6 mt-6">
-            <Input type="file" />
+            <Input type="file" {...register('avatar')} />
 
-            <Button onClick={handleNextStep}>Finalizar</Button>
+            <Button onClick={handleSubmit(handleAddAvatar)}>Finalizar</Button>
           </div>
         </div>
       </div>
