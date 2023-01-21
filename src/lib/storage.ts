@@ -5,7 +5,7 @@ export const storage = multer.diskStorage({
   destination: './public/uploads',
   filename: (_req, file, callback) => {
     const hash = randomBytes(10).toString('hex')
-    const filename = `${hash}-${file.originalname}`
+    const filename = `${hash}-${file.originalname.replaceAll(' ', '_')}`
 
     callback(null, filename)
   },
