@@ -6,10 +6,10 @@ export function Actions() {
     <motion.div
       initial={{ opacity: 0, x: 50 }}
       whileInView={{ opacity: 1, x: 0, transition: { duration: 0.8 } }}
-      className="bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex-1"
+      className="bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex-1 h-max my-auto"
     >
       <h3 className="text-lg font-bold text-slate-200">Ações</h3>
-      <div className="flex items-center justify-between h-full gap-4">
+      <div className="flex items-center justify-between h-full gap-4 mt-8">
         <Link
           href="/patients/create"
           className="bg-slate-700 border-2 border-slate-600 w-3/4 p-4 rounded-md flex gap-2 flex-col justify-center items-center text-slate-100 font-bold text-lg hover:border-teal-500 transition-all cursor-pointer"
