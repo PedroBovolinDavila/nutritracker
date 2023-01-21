@@ -9,7 +9,7 @@ import { localStorageConfig } from '../../config/localStorage'
 import { api } from '../../lib/axios'
 
 const registerFormSchema = z.object({
-  username: z.string(),
+  username: z.string().min(1, { message: 'Informe um username.' }),
   password: z
     .string()
     .min(6, { message: 'Sua senha deve ter no mínimo 6 caracteres' }),
@@ -18,8 +18,13 @@ const registerFormSchema = z.object({
 type RegisterFormData = z.infer<typeof registerFormSchema>
 
 export default function Register() {
-  const { register, handleSubmit } = useForm<RegisterFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormSchema),
+    shouldFocusError: false,
   })
 
   const router = useRouter()
@@ -65,10 +70,15 @@ export default function Register() {
 
           <div>
             <div className="flex flex-col gap-2 my-6">
-              <Input placeholder="Username" {...register('username')} />
+              <Input
+                placeholder="Username"
+                errorMessage={errors.username?.message}
+                {...register('username')}
+              />
               <Input
                 placeholder="Senha"
                 type="password"
+                errorMessage={errors.password?.message}
                 {...register('password')}
               />
             </div>

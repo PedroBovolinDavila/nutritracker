@@ -15,8 +15,13 @@ const addAvatarFormSchema = z.object({
 type AddAvatarFormData = z.infer<typeof addAvatarFormSchema>
 
 export default function AddAvatar() {
-  const { register, handleSubmit } = useForm<AddAvatarFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AddAvatarFormData>({
     resolver: zodResolver(addAvatarFormSchema),
+    shouldFocusError: false,
   })
 
   const router = useRouter()
@@ -59,7 +64,11 @@ export default function AddAvatar() {
           </h3>
 
           <div className="flex flex-col gap-6 mt-6">
-            <Input type="file" {...register('avatar')} />
+            <Input
+              type="file"
+              errorMessage={errors.avatar?.message as string}
+              {...register('avatar')}
+            />
 
             <Button onClick={handleSubmit(handleAddAvatar)}>Finalizar</Button>
           </div>

@@ -9,8 +9,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { localStorageConfig } from '../../config/localStorage'
 
 const signUpFormSchema = z.object({
-  name: z.string(),
-  lastName: z.string(),
+  name: z.string().min(1, { message: 'Informe seu nome.' }),
+  lastName: z.string().min(1, { message: 'Informe seu sobrenome.' }),
   age: z
     .string()
     .transform((age) => Number(age))
@@ -21,8 +21,13 @@ const signUpFormSchema = z.object({
 type SignUpFormData = z.infer<typeof signUpFormSchema>
 
 export default function SignUp() {
-  const { register, handleSubmit } = useForm<SignUpFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpFormSchema),
+    shouldFocusError: false,
   })
 
   const router = useRouter()
@@ -60,10 +65,27 @@ export default function SignUp() {
 
           <div>
             <div className="grid grid-cols-2 my-6 gap-2">
-              <Input placeholder="Nome" {...register('name')} />
-              <Input placeholder="Sobrenome" {...register('lastName')} />
-              <Input placeholder="Idade" type="number" {...register('age')} />
-              <Input placeholder="E-mail" type="email" {...register('email')} />
+              <Input
+                placeholder="Nome"
+                errorMessage={errors.name?.message}
+                {...register('name')}
+              />
+              <Input
+                placeholder="Sobrenome"
+                errorMessage={errors.lastName?.message}
+                {...register('lastName')}
+              />
+              <Input
+                placeholder="Idade"
+                type="number"
+                errorMessage={errors.age?.message}
+                {...register('age')}
+              />
+              <Input
+                placeholder="E-mail"
+                errorMessage={errors.email?.message}
+                {...register('email')}
+              />
             </div>
 
             <Button onClick={handleSubmit(handleSignUp)}>Proximo passo</Button>

@@ -17,8 +17,13 @@ const addDescriptionFormSchema = z.object({
 type AddDescriptionFormData = z.infer<typeof addDescriptionFormSchema>
 
 export default function AddDescription() {
-  const { register, handleSubmit } = useForm<AddDescriptionFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AddDescriptionFormData>({
     resolver: zodResolver(addDescriptionFormSchema),
+    shouldFocusError: false,
   })
 
   const router = useRouter()
@@ -58,7 +63,11 @@ export default function AddDescription() {
           </h3>
 
           <div className="flex flex-col gap-6 mt-6">
-            <TextArea placeholder="Descrição" {...register('description')} />
+            <TextArea
+              placeholder="Descrição"
+              errorMessage={errors.description?.message}
+              {...register('description')}
+            />
 
             <Button onClick={handleSubmit(handleAddDescription)}>
               Proximo passo
