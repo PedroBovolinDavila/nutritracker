@@ -1,12 +1,41 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/router'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 import { Button } from '../../components/Button'
 import { MultiStep } from '../../components/MultiStep'
 import { TextArea } from '../../components/TextArea'
+import { localStorageConfig } from '../../config/localStorage'
+import { api } from '../../lib/axios'
+
+const addDescriptionFormSchema = z.object({
+  description: z
+    .string()
+    .min(10, { message: 'Sua descrição deve ter no mínimo 10 caracteres.' }),
+})
+
+type AddDescriptionFormData = z.infer<typeof addDescriptionFormSchema>
 
 export default function AddDescription() {
+  const { register, handleSubmit } = useForm<AddDescriptionFormData>({
+    resolver: zodResolver(addDescriptionFormSchema),
+  })
+
   const router = useRouter()
 
-  async function handleNextStep() {
+  async function handleAddDescription(formData: AddDescriptionFormData) {
+    const doctorId = localStorage.getItem(localStorageConfig.doctorIdKey)
+
+    if (!doctorId) {
+      await router.push('/signup')
+    }
+
+    await api.patch(
+      '/doctors/add-description',
+      { description: formData.description },
+      { params: { doctorId } },
+    )
+
     await router.push('/signup/add-avatar')
   }
 
@@ -29,9 +58,11 @@ export default function AddDescription() {
           </h3>
 
           <div className="flex flex-col gap-6 mt-6">
-            <TextArea placeholder="Descrição" />
+            <TextArea placeholder="Descrição" {...register('description')} />
 
-            <Button onClick={handleNextStep}>Proximo passo</Button>
+            <Button onClick={handleSubmit(handleAddDescription)}>
+              Proximo passo
+            </Button>
           </div>
         </div>
       </div>
