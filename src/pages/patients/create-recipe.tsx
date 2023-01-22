@@ -8,9 +8,13 @@ import ReactMarkdown from 'react-markdown'
 import RehypeRawPlugin from 'rehype-raw'
 import { addCommunHtmlTag, TagOptions } from '../../utils/addCommunHtmlTag'
 import { addListHtmlTag } from '../../utils/addLIstHtmlTag'
+import { Modal } from '../../components/Modal'
+import { PatientCard } from '../../components/doctor/PatientCard'
+import { X } from 'phosphor-react'
 
 export default function CreateRecipe() {
   const [recipe, setRecipe] = useState('')
+  const [isChosePatientModalOpen, setChosePatientModalOpen] = useState(false)
   const [listElementsQuantity, setListElementsQuantity] = useState(0)
   const [title, setTitle] = useState('')
   const [subtitle, setSubtitle] = useState('')
@@ -62,7 +66,9 @@ export default function CreateRecipe() {
             </Button>
           </div>
           <div className="flex flex-col gap-4 bg-slate-800 border-2 border-slate-700 rounded-md p-4 h-max mt-4">
-            <Button>Adicionar receita</Button>
+            <Button onClick={() => setChosePatientModalOpen(true)}>
+              Escolher paciente
+            </Button>
             <Button onClick={() => setRecipe('')}>Limpar</Button>
           </div>
         </div>
@@ -192,6 +198,27 @@ export default function CreateRecipe() {
           )}
         />
       </div>
+
+      <Modal isOpen={isChosePatientModalOpen} large>
+        <h1 className="text-2xl text-slate-200 font-bold mb-8">
+          Informe o paciente que ira receber a receita
+        </h1>
+
+        <button
+          className="text-slate-400 absolute top-4 right-4"
+          onClick={() => setChosePatientModalOpen(false)}
+        >
+          <X size={24} />
+        </button>
+
+        <div className="overflow-auto h-96 flex flex-col gap-4 pr-1">
+          <PatientCard />
+          <PatientCard />
+          <PatientCard />
+          <PatientCard />
+          <PatientCard />
+        </div>
+      </Modal>
     </div>
   )
 }
