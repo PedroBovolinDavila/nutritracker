@@ -24,7 +24,7 @@ export default function SignUp() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpFormSchema),
     shouldFocusError: false,
@@ -88,7 +88,12 @@ export default function SignUp() {
               />
             </div>
 
-            <Button onClick={handleSubmit(handleSignUp)}>Proximo passo</Button>
+            <Button
+              onClick={handleSubmit(handleSignUp)}
+              disabled={isSubmitting}
+            >
+              Proximo passo
+            </Button>
           </div>
         </div>
       </div>

@@ -20,7 +20,7 @@ export default function AddDescription() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<AddDescriptionFormData>({
     resolver: zodResolver(addDescriptionFormSchema),
     shouldFocusError: false,
@@ -69,7 +69,10 @@ export default function AddDescription() {
               {...register('description')}
             />
 
-            <Button onClick={handleSubmit(handleAddDescription)}>
+            <Button
+              onClick={handleSubmit(handleAddDescription)}
+              disabled={isSubmitting}
+            >
               Proximo passo
             </Button>
           </div>

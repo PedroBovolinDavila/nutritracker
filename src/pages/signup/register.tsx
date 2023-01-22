@@ -21,7 +21,7 @@ export default function Register() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormSchema),
     shouldFocusError: false,
@@ -83,7 +83,10 @@ export default function Register() {
               />
             </div>
 
-            <Button onClick={handleSubmit(handleRegisterDoctor)}>
+            <Button
+              onClick={handleSubmit(handleRegisterDoctor)}
+              disabled={isSubmitting}
+            >
               Proximo passo
             </Button>
           </div>

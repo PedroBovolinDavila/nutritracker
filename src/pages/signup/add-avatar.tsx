@@ -18,7 +18,7 @@ export default function AddAvatar() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<AddAvatarFormData>({
     resolver: zodResolver(addAvatarFormSchema),
     shouldFocusError: false,
@@ -70,7 +70,12 @@ export default function AddAvatar() {
               {...register('avatar')}
             />
 
-            <Button onClick={handleSubmit(handleAddAvatar)}>Finalizar</Button>
+            <Button
+              onClick={handleSubmit(handleAddAvatar)}
+              disabled={isSubmitting}
+            >
+              Finalizar
+            </Button>
           </div>
         </div>
       </div>
