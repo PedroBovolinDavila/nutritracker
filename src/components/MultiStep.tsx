@@ -1,11 +1,22 @@
 interface MultiStepProps {
   steps: string[]
   activeStep: number
+  vertical?: boolean
 }
 
-export function MultiStep({ activeStep, steps }: MultiStepProps) {
+export function MultiStep({
+  activeStep,
+  steps,
+  vertical = false,
+}: MultiStepProps) {
   return (
-    <div className="bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex justify-between items-center">
+    <div
+      className={`bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex ${
+        vertical
+          ? 'flex-col justify-start items-start gap-6 h-max'
+          : 'flex-row  justify-between items-center'
+      }`}
+    >
       {steps.map((step, index) => {
         return (
           <div key={index} className="flex items-center gap-2 text-slate-300">
