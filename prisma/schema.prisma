@@ -23,5 +23,26 @@ model Doctor {
 
   created_at DateTime @default(now())
 
+  patients Patients[]
+
   @@map("doctors")
+}
+
+model Patients {
+  id          String @id @default(uuid())
+  name        String
+  lastName    String
+  age         Int
+  email       String
+  username    String @unique
+  password    String
+  description String
+  avatar_url  String
+
+  created_at DateTime @default(now())
+
+  doctor_id String?
+  doctor    Doctor? @relation(fields: [doctor_id], references: [id])
+
+  @@map("patients")
 }
