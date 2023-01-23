@@ -11,7 +11,7 @@ export function Navbar() {
       className="w-full max-w-screen-xl mx-auto bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex items-center justify-between"
     >
       {/* Header */}
-      <Link href="/dashboard" className="font-bold text-2xl text-slate-200">
+      <Link href="/" className="font-bold text-2xl text-slate-200">
         Nutri
         <span className="text-teal-400">Tracker</span>
       </Link>
