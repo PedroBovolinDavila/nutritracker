@@ -1,3 +1,4 @@
 export const localStorageConfig = {
-  doctorIdKey: '@nutritracker-userId',
+  doctorIdKey: '@nutritracker-doctorId',
+  patientIdKey: '@nutritracker-patientId',
 }
