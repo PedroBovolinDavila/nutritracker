@@ -3,9 +3,7 @@ import { Profile } from '../components/Profile'
 import { Actions } from '../components/doctor/Actions'
 import { Patients } from '../components/doctor/Patients'
 import { GetServerSideProps } from 'next'
-import { api } from '../lib/axios'
-import { parseCookies } from 'nookies'
-import { prisma } from '../lib/prisma'
+import { getDoctorData } from '../utils/getDoctorData'
 
 interface DoctorProps {
   name: string
@@ -28,41 +26,13 @@ export default function Doctor({ name, avatar, email }: DoctorProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const { '@nutritracker-auth': token } = parseCookies({ req })
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { redirectUrl, doctor } = await getDoctorData(ctx)
 
-  if (!token) {
+  if (redirectUrl) {
     return {
       redirect: {
-        destination: '/signin',
-        permanent: false,
-      },
-    }
-  }
-
-  const { data } = await api.post('http://localhost:3000/api/validate-token', {
-    token,
-  })
-
-  if (data.role === 'patient') {
-    return {
-      redirect: {
-        destination: '/patient',
-        permanent: false,
-      },
-    }
-  }
-
-  const doctor = await prisma.doctor.findUnique({
-    where: {
-      id: data.id,
-    },
-  })
-
-  if (!doctor) {
-    return {
-      redirect: {
-        destination: '/patient',
+        destination: redirectUrl,
         permanent: false,
       },
     }
@@ -70,9 +40,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
   return {
     props: {
-      name: doctor.name,
-      avatar: doctor.avatar_url,
-      email: doctor.email,
+      name: doctor?.name,
+      avatar: doctor?.avatar_url,
+      email: doctor?.email,
     },
   }
 }
