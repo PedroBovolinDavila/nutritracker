@@ -33,7 +33,7 @@ export default function AddAvatar() {
       await router.push('/signup')
     }
 
-    const { data } = await api.patch(
+    await api.patch(
       '/doctors/add-avatar',
       { file: formData.avatar[0] },
       {
@@ -42,7 +42,9 @@ export default function AddAvatar() {
       },
     )
 
-    await router.push(`/doctor/${data.content.username}`)
+    localStorage.removeItem(localStorageConfig.doctorIdKey)
+
+    await router.push('/signin')
   }
 
   return (
