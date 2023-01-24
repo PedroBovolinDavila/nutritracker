@@ -28,6 +28,9 @@ export async function getDoctorData(ctx: GetServerSidePropsContext) {
     where: {
       id: data.id,
     },
+    include: {
+      patients: true,
+    },
   })
 
   if (!doctor) {
