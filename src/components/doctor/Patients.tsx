@@ -1,4 +1,5 @@
 import { AnimatePresence, motion, Variants } from 'framer-motion'
+import { Patient } from '../../pages/doctor'
 import { PatientCard } from './PatientCard'
 
 const patientCardContainerVariants: Variants = {
@@ -13,7 +14,13 @@ const patientCardContainerVariants: Variants = {
   },
 }
 
-export function Patients() {
+interface PatientsProps {
+  patients: Patient[]
+}
+
+export function Patients({ patients }: PatientsProps) {
+  console.log(patients)
+
   return (
     <div className="w-full max-w-screen-xl mx-auto bg-slate-800 border-2 border-slate-700 rounded-md p-4 mt-4">
       <div className="border-b-2 border-b-slate-600 pb-2">
@@ -26,12 +33,9 @@ export function Patients() {
         className="flex gap-4 flex-col py-4"
       >
         <AnimatePresence>
-          <PatientCard key={1} />
-          <PatientCard key={2} />
-          <PatientCard key={3} />
-          <PatientCard key={4} />
-          <PatientCard key={5} />
-          <PatientCard key={6} />
+          {patients.map((patient) => {
+            return <PatientCard key={patient.id} patient={patient} />
+          })}
         </AnimatePresence>
       </motion.div>
     </div>

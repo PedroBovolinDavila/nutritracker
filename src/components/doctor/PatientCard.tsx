@@ -1,8 +1,13 @@
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
+import { Patient } from '../../pages/doctor'
 
-export function PatientCard() {
+interface PatientCardProps {
+  patient: Patient
+}
+
+export function PatientCard({ patient }: PatientCardProps) {
   const router = useRouter()
 
   async function handleOpenPatientDetails() {
@@ -28,7 +33,7 @@ export function PatientCard() {
       onClick={handleOpenPatientDetails}
     >
       <Image
-        src="https://github.com/pedrobovolindavila.png"
+        src={`http://localhost:3000/uploads/${patient.avatar_url}`}
         width={120}
         height={120}
         className="rounded-md"
@@ -36,13 +41,10 @@ export function PatientCard() {
       />
 
       <div>
-        <strong className="text-lg text-slate-300 font-bold">Paicente 1</strong>
-        <p className="text-slate-300">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias
-          delectus ea quia sint. Exercitationem assumenda, veritatis, mollitia
-          aliquam delectus in deleniti, laboriosam nostrum rerum architecto
-          veniam iste incidunt unde necessitatibus!
-        </p>
+        <strong className="text-lg text-slate-300 font-bold">
+          {patient.name} {patient.lastName}
+        </strong>
+        <p className="text-slate-300">{patient.description}</p>
       </div>
     </motion.div>
   )
