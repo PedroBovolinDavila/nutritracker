@@ -11,8 +11,17 @@ import { addListHtmlTag } from '../../utils/addLIstHtmlTag'
 import { Modal } from '../../components/Modal'
 import { PatientCard } from '../../components/doctor/PatientCard'
 import { X } from 'phosphor-react'
+import { GetServerSideProps } from 'next'
+import { parseCookies } from 'nookies'
+import { prisma } from '../../lib/prisma'
+import { api } from '../../lib/axios'
+import { Patient } from '../doctor'
 
-export default function CreateRecipe() {
+interface CreateRecipeProps {
+  patients: Patient[]
+}
+
+export default function CreateRecipe({ patients }: CreateRecipeProps) {
   const [recipe, setRecipe] = useState('')
   const [isChosePatientModalOpen, setChosePatientModalOpen] = useState(false)
   const [listElementsQuantity, setListElementsQuantity] = useState(0)
@@ -212,13 +221,61 @@ export default function CreateRecipe() {
         </button>
 
         <div className="overflow-auto h-96 flex flex-col gap-4 pr-1">
-          <PatientCard />
-          <PatientCard />
-          <PatientCard />
-          <PatientCard />
-          <PatientCard />
+          {patients.map((patient) => {
+            return <PatientCard key={patient.id} patient={patient} />
+          })}
         </div>
       </Modal>
     </div>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { '@nutritracker-auth': token } = parseCookies({ req })
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/signin',
+        permanent: false,
+      },
+    }
+  }
+
+  const { data } = await api.post('http://localhost:3000/api/validate-token', {
+    token,
+  })
+
+  if (data.role !== 'doctor') {
+    return {
+      redirect: {
+        destination: '/signin',
+        permanent: false,
+      },
+    }
+  }
+
+  const doctor = await prisma.doctor.findUnique({
+    where: {
+      id: data.id,
+    },
+    include: {
+      patients: true,
+    },
+  })
+
+  if (!doctor) {
+    return {
+      redirect: {
+        destination: '/signin',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {
+      patients: JSON.parse(JSON.stringify(doctor.patients)),
+    },
+  }
 }
