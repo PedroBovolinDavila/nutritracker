@@ -1,5 +1,4 @@
 import { LinkButton } from '../LinkButton'
-import { motion } from 'framer-motion'
 
 interface DescriptionProps {
   username: string
@@ -7,11 +6,7 @@ interface DescriptionProps {
 
 export function Description({ username }: DescriptionProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -50 }}
-      whileInView={{ opacity: 1, x: 0, transition: { duration: 0.8 } }}
-      className="flex-1 bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex flex-col gap-8 "
-    >
+    <div className="flex-1 bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex flex-col gap-8 ">
       <div>
         <h1 className="text-slate-200 font-semibold text-2xl">{username}</h1>
         <p className="text-slate-300 leading-relaxed mt-2">
@@ -28,6 +23,6 @@ export function Description({ username }: DescriptionProps) {
         <LinkButton to="#">Adicionar dieta</LinkButton>
         <LinkButton to="#">Enviar alerta</LinkButton>
       </div>
-    </motion.div>
+    </div>
   )
 }

@@ -1,4 +1,3 @@
-import { AnimatePresence } from 'framer-motion'
 import { MealCard } from './MealCard'
 
 export function Meals() {
@@ -8,14 +7,12 @@ export function Meals() {
         <strong className="font-bold text-xl text-slate-200">Refeições</strong>
       </div>
       <div className="flex gap-4 flex-col py-4">
-        <AnimatePresence>
-          <MealCard />
-          <MealCard />
-          <MealCard />
-          <MealCard />
-          <MealCard />
-          <MealCard />
-        </AnimatePresence>
+        <MealCard />
+        <MealCard />
+        <MealCard />
+        <MealCard />
+        <MealCard />
+        <MealCard />
       </div>
     </div>
   )

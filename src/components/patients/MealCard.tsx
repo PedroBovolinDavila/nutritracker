@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import { Clock } from 'phosphor-react'
-import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 
 export function MealCard() {
@@ -11,15 +10,7 @@ export function MealCard() {
   }
 
   return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        y: 50,
-      }}
-      whileInView={{
-        opacity: 1,
-        y: 0,
-      }}
+    <div
       className="p-4 border-2 rounded-md border-slate-600 hover:border-teal-600 transition-all flex gap-4 cursor-pointer"
       onClick={handleOpenMealDetails}
     >
@@ -44,6 +35,6 @@ export function MealCard() {
           <Clock /> 12:00
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 }

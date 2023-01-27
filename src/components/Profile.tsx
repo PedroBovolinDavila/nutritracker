@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import { motion } from 'framer-motion'
 
 interface ProfileProps {
   name: string
@@ -10,11 +9,7 @@ interface ProfileProps {
 
 export function Profile({ name, avatar, email, x }: ProfileProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, x }}
-      whileInView={{ opacity: 1, x: 0, transition: { duration: 0.8 } }}
-      className="bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex flex-col"
-    >
+    <div className="bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex flex-col">
       <div className="flex flex-col items-center gap-4">
         <Image
           src={`http://localhost:3000/uploads/${avatar}`}
@@ -28,6 +23,6 @@ export function Profile({ name, avatar, email, x }: ProfileProps) {
           <p className="text-md mt-1 text-slate-400">{email}</p>
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 }

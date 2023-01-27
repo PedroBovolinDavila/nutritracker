@@ -1,17 +1,6 @@
 import Image from 'next/image'
 import { Clock } from 'phosphor-react'
 import { FoodCard } from './FoodCard'
-import { motion, Variants } from 'framer-motion'
-
-const foodContainerVariants: Variants = {
-  hide: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-}
 
 export function MealSection() {
   return (
@@ -34,12 +23,7 @@ export function MealSection() {
             iure necessitatibus, quidem minus.
           </p>
         </div>
-        <motion.div
-          variants={foodContainerVariants}
-          initial="hide"
-          animate="show"
-          className="mt-4 flex flex-wrap gap-2"
-        >
+        <div className="mt-4 flex flex-wrap gap-2">
           <FoodCard />
           <FoodCard />
           <FoodCard />
@@ -49,7 +33,7 @@ export function MealSection() {
           <FoodCard />
           <FoodCard />
           <FoodCard />
-        </motion.div>
+        </div>
         <div className="flex gap-1 mt-4 items-center text-slate-300">
           <Clock /> 12:00
         </div>
