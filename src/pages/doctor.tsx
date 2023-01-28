@@ -26,7 +26,7 @@ export default function Doctor({ name, avatar, email, patients }: DoctorProps) {
     <div className="bg-gray-900 w-full p-4">
       <Navbar />
       <div className="w-full mt-4 max-w-screen-xl mx-auto flex gap-4">
-        <Profile x={-50} avatar={avatar} name={name} email={email} />
+        <Profile avatar={avatar} name={name} email={email} />
         <Actions />
       </div>
       {patients.length ? (
@@ -36,7 +36,7 @@ export default function Doctor({ name, avatar, email, patients }: DoctorProps) {
           <h3 className="text-2xl font-bold text-slate-200">
             Você não tem nenhum paciente cadastrado
           </h3>
-          <Link href="/patients/create" className="text-lg text-slate-300 mt-2">
+          <Link href="/patient/create" className="text-lg text-slate-300 mt-2">
             Cadastre agora clicando aqui
           </Link>
         </div>
