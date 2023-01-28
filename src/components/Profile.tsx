@@ -4,12 +4,11 @@ interface ProfileProps {
   name: string
   avatar: string
   email: string
-  x: number
 }
 
-export function Profile({ name, avatar, email, x }: ProfileProps) {
+export function Profile({ name, avatar, email }: ProfileProps) {
   return (
-    <div className="bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex flex-col">
+    <div className="bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex flex-col h-max">
       <div className="flex flex-col items-center gap-4">
         <Image
           src={`http://localhost:3000/uploads/${avatar}`}
