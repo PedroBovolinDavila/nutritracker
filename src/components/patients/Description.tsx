@@ -1,27 +1,35 @@
 import { LinkButton } from '../LinkButton'
 
 interface DescriptionProps {
-  username: string
+  name: string
+  content: string
+  doctorView?: boolean
 }
 
-export function Description({ username }: DescriptionProps) {
+export function Description({
+  name,
+  content,
+  doctorView = false,
+}: DescriptionProps) {
   return (
     <div className="flex-1 bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex flex-col gap-8 ">
       <div>
-        <h1 className="text-slate-200 font-semibold text-2xl">{username}</h1>
-        <p className="text-slate-300 leading-relaxed mt-2">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Mollitia
-          reprehenderit maiores suscipit libero itaque, natus ullam tempora
-          consequatur tempore amet harum placeat at unde sit temporibus ducimus
-          dicta, omnis quibusdam! Lorem ipsum, dolor sit amet consectetur
-          adipisicing elit. Quasi sapiente ipsa aliquid sed velit saepe
-          dignissimos qui quod atque cumque pariatur, veritatis enim ex, nobis
-          animi odio quis. A, dolor.
-        </p>
+        <h1 className="text-slate-200 font-semibold text-2xl">{name}</h1>
+        <p className="text-slate-300 leading-relaxed mt-2">{content}</p>
       </div>
-      <div className="flex gap-3">
-        <LinkButton to="#">Adicionar dieta</LinkButton>
-        <LinkButton to="#">Enviar alerta</LinkButton>
+      <div className="flex gap-3 mt-auto">
+        {doctorView ? (
+          <>
+            <LinkButton to="#">Enviar alerta</LinkButton>
+            <LinkButton to="#">Editar paciente</LinkButton>
+            <LinkButton to="#">Excluir paciente</LinkButton>
+          </>
+        ) : (
+          <>
+            <LinkButton to="#">Adicionar refeição</LinkButton>
+            <LinkButton to="#">Enviar mensagem para o doutor</LinkButton>
+          </>
+        )}
       </div>
     </div>
   )
