@@ -20,7 +20,7 @@ export async function getDoctorData(ctx: GetServerSidePropsContext) {
 
   if (data.role === 'patient') {
     return {
-      redirectUrl: '/patients',
+      redirectUrl: '/patient',
     }
   }
 
