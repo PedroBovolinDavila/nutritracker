@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -45,6 +45,7 @@ model Patients {
   doctor_id String?
   doctor    Doctor? @relation(fields: [doctor_id], references: [id])
   Alert     Alert[]
+  Meal      Meal[]
 
   @@map("patients")
 }
@@ -62,4 +63,17 @@ model Alert {
   patient     Patients @relation(fields: [patients_id], references: [id])
 
   @@map("alerts")
+}
+
+model Meal {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  ingredients Json[]
+  created_at  DateTime @default(now())
+
+  patient    Patients @relation(fields: [patient_id], references: [id])
+  patient_id String
+
+  @@map("meals")
 }
