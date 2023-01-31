@@ -1,9 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { AxiosError } from 'axios'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '../../../components/Button'
 import { Input } from '../../../components/Input'
+import { Modal } from '../../../components/Modal'
 import { MultiStep } from '../../../components/MultiStep'
 import { Navbar } from '../../../components/Navbar'
 import { localStorageConfig } from '../../../config/localStorage'
@@ -19,6 +22,11 @@ const registerPatientFormSchema = z.object({
 type RegisterPatientFormSchema = z.infer<typeof registerPatientFormSchema>
 
 export default function RegisterPatient() {
+  const [errorModalData, setErrorModalData] = useState({
+    open: false,
+    message: '',
+  })
+
   const {
     register,
     handleSubmit,
@@ -36,20 +44,35 @@ export default function RegisterPatient() {
       await router.push('/patients/create')
     }
 
-    await api.patch(
-      '/patients/register',
-      {
-        username: formData.username,
-        password: formData.password,
-      },
-      {
-        params: {
-          patientId,
+    try {
+      await api.patch(
+        '/patients/register',
+        {
+          username: formData.username,
+          password: formData.password,
         },
-      },
-    )
+        {
+          params: {
+            patientId,
+          },
+        },
+      )
 
-    await router.push('/patient/create/add-description')
+      await router.push('/patient/create/add-description')
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        setErrorModalData({
+          message: err.response?.data.message,
+          open: true,
+        })
+      } else {
+        setErrorModalData({
+          message:
+            'Erro ao registrar paciente, atualize a pagina e tente novamente.',
+          open: true,
+        })
+      }
+    }
   }
 
   return (
@@ -91,6 +114,20 @@ export default function RegisterPatient() {
           </Button>
         </div>
       </div>
+
+      <Modal isOpen={errorModalData.open}>
+        <h2 className="text-xl text-slate-200 font-bold">
+          Erro ao registrar paciente
+        </h2>
+        <p className="text-lg text-slate-200 my-4">{errorModalData.message}</p>
+        <Button
+          small
+          variant="secondary"
+          onClick={() => setErrorModalData({ open: false, message: '' })}
+        >
+          Fechar
+        </Button>
+      </Modal>
     </div>
   )
 }

@@ -1,9 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { AxiosError } from 'axios'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '../../components/Button'
 import { Input } from '../../components/Input'
+import { Modal } from '../../components/Modal'
 import { MultiStep } from '../../components/MultiStep'
 import { localStorageConfig } from '../../config/localStorage'
 import { api } from '../../lib/axios'
@@ -18,6 +21,11 @@ const registerFormSchema = z.object({
 type RegisterFormData = z.infer<typeof registerFormSchema>
 
 export default function Register() {
+  const [errorModalData, setErrorModalData] = useState({
+    open: false,
+    message: '',
+  })
+
   const {
     register,
     handleSubmit,
@@ -36,18 +44,27 @@ export default function Register() {
       await router.push('/signup')
     }
 
-    await api.patch(
-      '/doctors/register',
-      {
-        username: formData.username,
-        password: formData.password,
-      },
-      {
-        params: { doctorId },
-      },
-    )
+    try {
+      await api.patch(
+        '/doctors/register',
+        {
+          username: formData.username,
+          password: formData.password,
+        },
+        {
+          params: { doctorId },
+        },
+      )
 
-    await router.push('/signup/add-description')
+      await router.push('/signup/add-description')
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        setErrorModalData({
+          open: true,
+          message: err.response?.data.message,
+        })
+      }
+    }
   }
 
   return (
@@ -92,6 +109,20 @@ export default function Register() {
           </div>
         </div>
       </div>
+
+      <Modal isOpen={errorModalData.open}>
+        <h2 className="text-xl text-slate-200 font-bold">
+          Erro ao se registrar
+        </h2>
+        <p className="text-lg text-slate-200 my-4">{errorModalData.message}</p>
+        <Button
+          small
+          variant="secondary"
+          onClick={() => setErrorModalData({ open: false, message: '' })}
+        >
+          Fechar
+        </Button>
+      </Modal>
     </div>
   )
 }

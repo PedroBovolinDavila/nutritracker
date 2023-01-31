@@ -33,7 +33,7 @@ export default async function handler(
 
   if (patientExists) {
     return res.status(400).json({
-      message: `Username ${username} alredy taken`,
+      message: `O username ${username} já esta em uso, escolha outro.`,
     })
   }
 
