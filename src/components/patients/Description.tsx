@@ -1,15 +1,26 @@
+import React from 'react'
 import { LinkButton } from '../LinkButton'
+
+type ModalTriggerFuncion = React.Dispatch<React.SetStateAction<boolean>>
 
 interface DescriptionProps {
   name: string
   content: string
   doctorView?: boolean
+  modalTriggers: {
+    createMeal: ModalTriggerFuncion
+    sendMessageToDoctor?: ModalTriggerFuncion
+    sendAlert?: ModalTriggerFuncion
+    aditPatient?: ModalTriggerFuncion
+    removePatient?: ModalTriggerFuncion
+  }
 }
 
 export function Description({
   name,
   content,
   doctorView = false,
+  modalTriggers,
 }: DescriptionProps) {
   return (
     <div className="flex-1 bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex flex-col gap-8 ">
@@ -20,14 +31,16 @@ export function Description({
       <div className="flex gap-3 mt-auto">
         {doctorView ? (
           <>
-            <LinkButton to="#">Enviar alerta</LinkButton>
-            <LinkButton to="#">Editar paciente</LinkButton>
-            <LinkButton to="#">Excluir paciente</LinkButton>
+            <LinkButton>Enviar alerta</LinkButton>
+            <LinkButton>Editar paciente</LinkButton>
+            <LinkButton>Excluir paciente</LinkButton>
           </>
         ) : (
           <>
-            <LinkButton to="#">Adicionar refeição</LinkButton>
-            <LinkButton to="#">Enviar mensagem para o doutor</LinkButton>
+            <LinkButton onClick={() => modalTriggers.createMeal(true)}>
+              Adicionar refeição
+            </LinkButton>
+            <LinkButton>Enviar mensagem para o doutor</LinkButton>
           </>
         )}
       </div>
