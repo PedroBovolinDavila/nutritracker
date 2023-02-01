@@ -11,6 +11,7 @@ import { CreateMealModal } from '../../components/meals/CreateMealModal'
 
 interface PatientProps {
   patient: {
+    id: string
     name: string
     lastName: string
     email: string
@@ -62,6 +63,7 @@ export default function Patient({ patient }: PatientProps) {
       </div>
 
       <CreateMealModal
+        patientId={patient.id}
         isOpen={isCreateMealModalOpen}
         closeModal={() => setIsCreateMealModalOpen(false)}
       />

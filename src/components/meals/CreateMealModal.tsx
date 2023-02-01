@@ -8,6 +8,9 @@ import { IconButton } from '../IconButton'
 import { Plus } from 'phosphor-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
+import { api } from '../../lib/axios'
+import { AxiosError } from 'axios'
+import { useRouter } from 'next/router'
 
 const createMealFormSchema = z.object({
   title: z
@@ -24,7 +27,7 @@ const createMealFormSchema = z.object({
         weight: z.number(),
       }),
     )
-    .min(1),
+    .min(1, { message: 'Adicione pelo menos 1 ingrediente.' }),
 })
 
 const addIngredientFormSchema = z.object({
@@ -40,9 +43,18 @@ type AddIngredientFormData = z.infer<typeof addIngredientFormSchema>
 interface CreateMealModalProps {
   isOpen: boolean
   closeModal: () => void
+  patientId: string
 }
 
-export function CreateMealModal({ isOpen, closeModal }: CreateMealModalProps) {
+export function CreateMealModal({
+  isOpen,
+  closeModal,
+  patientId,
+}: CreateMealModalProps) {
+  const [errorModalData, setErrorModalData] = useState({
+    open: false,
+    message: '',
+  })
   const [isAddIngredientModalOpen, setIsAddIngredientModalOpen] =
     useState(false)
 
@@ -64,6 +76,8 @@ export function CreateMealModal({ isOpen, closeModal }: CreateMealModalProps) {
     resolver: zodResolver(addIngredientFormSchema),
   })
 
+  const router = useRouter()
+
   const { fields, append } = useFieldArray({
     name: 'ingredients',
     rules: {
@@ -72,8 +86,30 @@ export function CreateMealModal({ isOpen, closeModal }: CreateMealModalProps) {
     control,
   })
 
-  function handleCreateMeal(formData: CreateMealFormData) {
-    console.log(formData)
+  async function handleCreateMeal(formData: CreateMealFormData) {
+    try {
+      const { data } = await api.post(
+        '/meals',
+        {
+          patientId,
+          description: formData.description,
+          title: formData.title,
+          ingredients: formData.ingredients,
+          image: formData.image[0],
+        },
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        },
+      )
+      await router.push(`/meals/${data.mealId}`)
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        setErrorModalData({
+          open: true,
+          message: err.response?.data.message,
+        })
+      }
+    }
   }
 
   function handleAddIngredient(formData: AddIngredientFormData) {
@@ -108,7 +144,14 @@ export function CreateMealModal({ isOpen, closeModal }: CreateMealModalProps) {
           </div>
           <div>
             <div className="flex items-center justify-between text-slate-200">
-              <strong className="text-lg font-bold">Ingredientes</strong>
+              <div className="flex flex-col">
+                <strong className="text-lg font-bold mb-0">Ingredientes</strong>
+                {errors.ingredients?.message && (
+                  <span className="text-red-600 mt-1">
+                    {errors.ingredients.message}
+                  </span>
+                )}
+              </div>
 
               <IconButton
                 icon={<Plus />}
@@ -163,6 +206,20 @@ export function CreateMealModal({ isOpen, closeModal }: CreateMealModalProps) {
             Cancelar
           </Button>
         </div>
+      </Modal>
+
+      <Modal isOpen={errorModalData.open}>
+        <h2 className="text-xl text-slate-200 font-bold">
+          Erro ao adicionar refeição
+        </h2>
+        <p className="text-lg text-slate-200 my-4">{errorModalData.message}</p>
+        <Button
+          small
+          variant="secondary"
+          onClick={() => setErrorModalData({ open: false, message: '' })}
+        >
+          Fechar
+        </Button>
       </Modal>
     </>
   )

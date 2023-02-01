@@ -9,7 +9,14 @@ const createMealBodySchema = z.object({
   title: z.string().min(1, { message: 'Informe um titulo' }),
   description: z.string().min(1, { message: 'Informe uma descrição' }),
   patientId: z.string().uuid().min(1, { message: 'Informe um id' }),
-  ingredients: z.string().transform((ingredients) => JSON.parse(ingredients)),
+  ingredients: z
+    .array(
+      z.object({
+        name: z.string(),
+        weight: z.string().transform((weight) => Number(weight)),
+      }),
+    )
+    .min(1),
 })
 
 const upload = multer({ storage })
@@ -62,7 +69,11 @@ apiRoute.post(async (req: Req, res: NextApiResponse) => {
   } catch (err) {
     if (err instanceof ZodError) {
       return res.status(400).json({
-        message: err.message,
+        message: 'Infome uma imagem para sua refeição',
+      })
+    } else {
+      return res.status(400).json({
+        message: 'Infome uma imagem para sua refeição',
       })
     }
   }
