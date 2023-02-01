@@ -6,6 +6,8 @@ import { Plus } from 'phosphor-react'
 import { MealCard } from '../../components/patients/MealCard'
 import { GetServerSideProps } from 'next'
 import { getPatientData } from '../../utils/getPatientData'
+import { useState } from 'react'
+import { CreateMealModal } from '../../components/meals/CreateMealModal'
 
 interface PatientProps {
   patient: {
@@ -18,6 +20,8 @@ interface PatientProps {
 }
 
 export default function Patient({ patient }: PatientProps) {
+  const [isCreateMealModalOpen, setIsCreateMealModalOpen] = useState(false)
+
   return (
     <div className="bg-gray-900 w-full p-4">
       <Navbar />
@@ -30,6 +34,9 @@ export default function Patient({ patient }: PatientProps) {
         <Description
           name={`${patient.name} ${patient.lastName}`}
           content={patient.description}
+          modalTriggers={{
+            createMeal: setIsCreateMealModalOpen,
+          }}
         />
       </div>
 
@@ -53,6 +60,11 @@ export default function Patient({ patient }: PatientProps) {
           <MealCard />
         </div>
       </div>
+
+      <CreateMealModal
+        isOpen={isCreateMealModalOpen}
+        closeModal={() => setIsCreateMealModalOpen(false)}
+      />
     </div>
   )
 }
