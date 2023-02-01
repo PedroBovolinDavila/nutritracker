@@ -69,6 +69,7 @@ model Meal {
   id          String   @id @default(uuid())
   title       String
   description String
+  image_url   String
   ingredients Json[]
   created_at  DateTime @default(now())
 
