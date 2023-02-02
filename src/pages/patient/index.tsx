@@ -9,6 +9,17 @@ import { getPatientData } from '../../utils/getPatientData'
 import { useState } from 'react'
 import { CreateMealModal } from '../../components/meals/CreateMealModal'
 
+export interface Meal {
+  id: string
+  title: string
+  description: string
+  ingredients: {
+    name: string
+    weight: number
+  }[]
+  image_url: string
+}
+
 interface PatientProps {
   patient: {
     id: string
@@ -17,6 +28,7 @@ interface PatientProps {
     email: string
     description: string
     avatar_url: string
+    meals: Meal[]
   }
 }
 
@@ -55,10 +67,13 @@ export default function Patient({ patient }: PatientProps) {
           </Link>
         </div>
         <div className="mt-4 flex flex-col gap-3">
-          <MealCard />
-          <MealCard />
-          <MealCard />
-          <MealCard />
+          {patient.meals.length ? (
+            patient.meals.map((meal) => {
+              return <MealCard key={meal.id} meal={meal} />
+            })
+          ) : (
+            <div>pasd</div>
+          )}
         </div>
       </div>
 
