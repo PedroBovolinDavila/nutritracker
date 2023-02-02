@@ -44,8 +44,8 @@ model Patients {
 
   doctor_id String?
   doctor    Doctor? @relation(fields: [doctor_id], references: [id])
-  Alert     Alert[]
-  Meal      Meal[]
+  alerts     Alert[]
+  meals      Meal[]
 
   @@map("patients")
 }
