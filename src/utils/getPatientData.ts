@@ -30,6 +30,7 @@ export async function getPatientData(ctx: GetServerSidePropsContext) {
     },
     include: {
       doctor: true,
+      meals: true,
     },
   })
 
