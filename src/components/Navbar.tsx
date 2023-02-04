@@ -2,15 +2,16 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { destroyCookie } from 'nookies'
 import { Gear, Power, Bell } from 'phosphor-react'
-import { Alert } from '../pages/doctor'
+import { useAlerts } from '../hooks/useAlerts'
 import { IconButton } from './IconButton'
 
-interface NavbarProps {
-  alerts: Alert[]
-}
-
-export function Navbar({ alerts }: NavbarProps) {
+export function Navbar() {
   const router = useRouter()
+  const { alerts } = useAlerts()
+
+  const nonViewedAlerts = alerts.filter((alert) => !alert.viewed)
+
+  console.log(nonViewedAlerts)
 
   async function handleLogout() {
     destroyCookie(null, '@nutritracker-auth')
@@ -28,7 +29,7 @@ export function Navbar({ alerts }: NavbarProps) {
         <IconButton
           icon={<Bell />}
           title="Ver alertas"
-          alert={alerts.length > 0}
+          alert={nonViewedAlerts.length > 0}
         />
         <IconButton icon={<Gear />} title="Configurações da conta" />
         <IconButton
