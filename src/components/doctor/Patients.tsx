@@ -6,8 +6,6 @@ interface PatientsProps {
 }
 
 export function Patients({ patients }: PatientsProps) {
-  console.log(patients)
-
   return (
     <div className="w-full max-w-screen-xl mx-auto bg-slate-800 border-2 border-slate-700 rounded-md p-4 mt-4">
       <div className="border-b-2 border-b-slate-600 pb-2">
