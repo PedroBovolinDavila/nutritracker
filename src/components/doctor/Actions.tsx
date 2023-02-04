@@ -1,6 +1,51 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { api } from '../../lib/axios'
+import { Patient } from '../../pages/doctor'
+import { Button } from '../Button'
+import { Input } from '../Input'
+import { Modal } from '../Modal'
+import { Select } from '../Select'
+import { TextArea } from '../TextArea'
 
-export function Actions() {
+const createAlertFormSchema = z.object({
+  title: z.string().min(1, { message: 'Informe um titulo para o alerta.' }),
+  description: z
+    .string()
+    .min(10, { message: 'Informe uma descrição para o alerta.' }),
+  patientId: z.string().min(1, { message: 'Selecione um paciente.' }),
+})
+
+type CreateAlertFormData = z.infer<typeof createAlertFormSchema>
+
+interface ActionsProps {
+  patients: Patient[]
+}
+
+export function Actions({ patients }: ActionsProps) {
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<CreateAlertFormData>({
+    resolver: zodResolver(createAlertFormSchema),
+  })
+
+  async function handleCreateAlert(formData: CreateAlertFormData) {
+    await api.post('/alert', {
+      description: formData.description,
+      to: formData.patientId,
+      title: formData.title,
+    })
+
+    setIsAlertModalOpen(false)
+  }
+
   return (
     <div className="bg-slate-800 border-2 border-slate-700 rounded-md p-4 flex-1 h-max my-auto">
       <h3 className="text-lg font-bold text-slate-200">Ações</h3>
@@ -45,8 +90,8 @@ export function Actions() {
           </svg>
           Criar receita
         </Link>
-        <Link
-          href="/patient/create-alert"
+        <button
+          onClick={() => setIsAlertModalOpen(true)}
           className="bg-slate-700 border-2 border-slate-600 w-3/4 p-4 rounded-md flex gap-2 flex-col justify-center items-center text-slate-100 font-bold text-lg hover:border-teal-500 transition-all cursor-pointer"
         >
           <svg
@@ -64,8 +109,49 @@ export function Actions() {
             />
           </svg>
           Adicionar alerta
-        </Link>
+        </button>
       </div>
+
+      <Modal isOpen={isAlertModalOpen}>
+        <h3 className="text-xl text-slate-200 font-bold mb-4">
+          Envie um alerta/menssagem para um paciente
+        </h3>
+        <div className="flex flex-col gap-2">
+          <Input
+            placeholder="Titulo do alerta"
+            errorMessage={errors.title?.message}
+            {...register('title')}
+          />
+          <TextArea
+            placeholder="Conteudo do alerta"
+            errorMessage={errors.description?.message}
+            {...register('description')}
+          />
+          <Select
+            options={patients.map((patient) => ({
+              displayValue: `${patient.name} ${patient.lastName}`,
+              value: patient.id,
+            }))}
+            errorMessage={errors.patientId?.message}
+            {...register('patientId')}
+          />
+        </div>
+        <div className="flex gap-2 mt-4">
+          <Button
+            onClick={handleSubmit(handleCreateAlert)}
+            disabled={isSubmitting}
+          >
+            Adicionar
+          </Button>
+          <Button
+            variant="secondary"
+            small
+            onClick={() => setIsAlertModalOpen(false)}
+          >
+            Cancelar
+          </Button>
+        </div>
+      </Modal>
     </div>
   )
 }
