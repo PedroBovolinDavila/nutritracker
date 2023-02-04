@@ -5,6 +5,7 @@ import { Patients } from '../components/doctor/Patients'
 import { GetServerSideProps } from 'next'
 import { getDoctorData } from '../utils/getDoctorData'
 import Link from 'next/link'
+import { parseData } from '../utils/parseData'
 
 export interface Patient {
   id: string
@@ -14,20 +15,41 @@ export interface Patient {
   description: string
 }
 
+export interface Alert {
+  id: string
+  title: string
+  description: string
+  patient: Patient
+  doctor: {
+    id: string
+    avatar_url: string
+    name: string
+    lastName: string
+    description: string
+  }
+}
+
 interface DoctorProps {
   name: string
   avatar: string
   email: string
   patients: Patient[]
+  doctorAlerts: Alert[]
 }
 
-export default function Doctor({ name, avatar, email, patients }: DoctorProps) {
+export default function Doctor({
+  name,
+  avatar,
+  email,
+  patients,
+  doctorAlerts,
+}: DoctorProps) {
   return (
     <div className="bg-gray-900 w-full p-4">
-      <Navbar />
+      <Navbar alerts={doctorAlerts} />
       <div className="w-full mt-4 max-w-screen-xl mx-auto flex gap-4">
         <Profile avatar={avatar} name={name} email={email} />
-        <Actions />
+        <Actions patients={patients} />
       </div>
       {patients.length ? (
         <Patients patients={patients} />
@@ -62,7 +84,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       name: doctor?.name,
       avatar: doctor?.avatar_url,
       email: doctor?.email,
-      patients: JSON.parse(JSON.stringify(doctor?.patients)),
+      doctorAlerts: parseData(doctor?.doctorAlerts),
+      patients: parseData(doctor?.patients),
     },
   }
 }
