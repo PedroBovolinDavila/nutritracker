@@ -23,8 +23,9 @@ model Doctor {
 
   created_at DateTime @default(now())
 
-  patients Patients[]
-  Alert    Alert[]
+  patients     Patients[]
+  doctorAlerts DoctorAlert[]
+  PatientAlert PatientAlert[]
 
   @@map("doctors")
 }
@@ -44,25 +45,42 @@ model Patients {
 
   doctor_id String?
   doctor    Doctor? @relation(fields: [doctor_id], references: [id])
-  alerts     Alert[]
-  meals      Meal[]
+
+  meals        Meal[]
+  doctorAlerts DoctorAlert[]
+  PatientAlert PatientAlert[]
 
   @@map("patients")
 }
 
-model Alert {
+model DoctorAlert {
   id          String   @id @default(uuid())
   title       String
   description String
   created_at  DateTime @default(now())
 
-  doctor_id String
+  patient    Patients @relation(fields: [patient_id], references: [id])
+  patient_id String
+
   doctor    Doctor @relation(fields: [doctor_id], references: [id])
+  doctor_id String
 
-  patients_id String
-  patient     Patients @relation(fields: [patients_id], references: [id])
+  @@map("doctor_alerts")
+}
 
-  @@map("alerts")
+model PatientAlert {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  created_at  DateTime @default(now())
+
+  patient    Patients @relation(fields: [patient_id], references: [id])
+  patient_id String
+
+  doctor    Doctor @relation(fields: [doctor_id], references: [id])
+  doctor_id String
+
+  @@map("patient_alerts")
 }
 
 model Meal {
