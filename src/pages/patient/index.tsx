@@ -8,6 +8,7 @@ import { GetServerSideProps } from 'next'
 import { getPatientData } from '../../utils/getPatientData'
 import { useState } from 'react'
 import { CreateMealModal } from '../../components/meals/CreateMealModal'
+import { parseData } from '../../utils/parseData'
 
 export interface Meal {
   id: string
@@ -100,7 +101,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   return {
     props: {
-      patient: JSON.parse(JSON.stringify(patient)),
+      patient: parseData(patient),
     },
   }
 }

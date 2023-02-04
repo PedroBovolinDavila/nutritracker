@@ -16,6 +16,7 @@ import { parseCookies } from 'nookies'
 import { prisma } from '../../lib/prisma'
 import { api } from '../../lib/axios'
 import { Patient } from '../doctor'
+import { parseData } from '../../utils/parseData'
 
 interface CreateRecipeProps {
   patients: Patient[]
@@ -275,7 +276,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
   return {
     props: {
-      patients: JSON.parse(JSON.stringify(doctor.patients)),
+      patients: parseData(doctor.patients),
     },
   }
 }

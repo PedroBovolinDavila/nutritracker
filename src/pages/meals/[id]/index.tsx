@@ -8,6 +8,7 @@ import { prisma } from '../../../lib/prisma'
 import { Meal as MealType } from '../../patient'
 import Image from 'next/image'
 import { IngredientCard } from '../../../components/meals/IngredientCard'
+import { parseData } from '../../../utils/parseData'
 
 interface MealProps {
   role: 'doctor' | 'patient'
@@ -83,7 +84,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   return {
     props: {
       role: data.role,
-      meal: JSON.parse(JSON.stringify(meal)),
+      meal: parseData(meal),
     },
   }
 }
