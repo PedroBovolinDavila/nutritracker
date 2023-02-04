@@ -57,6 +57,7 @@ model DoctorAlert {
   id          String   @id @default(uuid())
   title       String
   description String
+  viewed      Boolean  @default(false)
   created_at  DateTime @default(now())
 
   patient    Patients @relation(fields: [patient_id], references: [id])
@@ -72,6 +73,7 @@ model PatientAlert {
   id          String   @id @default(uuid())
   title       String
   description String
+  viewed      Boolean  @default(false)
   created_at  DateTime @default(now())
 
   patient    Patients @relation(fields: [patient_id], references: [id])
