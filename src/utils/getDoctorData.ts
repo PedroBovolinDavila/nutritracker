@@ -30,6 +30,7 @@ export async function getDoctorData(ctx: GetServerSidePropsContext) {
     },
     include: {
       patients: true,
+      doctorAlerts: true,
     },
   })
 
