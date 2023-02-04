@@ -15,38 +15,17 @@ export interface Patient {
   description: string
 }
 
-export interface Alert {
-  id: string
-  title: string
-  description: string
-  patient: Patient
-  doctor: {
-    id: string
-    avatar_url: string
-    name: string
-    lastName: string
-    description: string
-  }
-}
-
 interface DoctorProps {
   name: string
   avatar: string
   email: string
   patients: Patient[]
-  doctorAlerts: Alert[]
 }
 
-export default function Doctor({
-  name,
-  avatar,
-  email,
-  patients,
-  doctorAlerts,
-}: DoctorProps) {
+export default function Doctor({ name, avatar, email, patients }: DoctorProps) {
   return (
     <div className="bg-gray-900 w-full p-4">
-      <Navbar alerts={doctorAlerts} />
+      <Navbar />
       <div className="w-full mt-4 max-w-screen-xl mx-auto flex gap-4">
         <Profile avatar={avatar} name={name} email={email} />
         <Actions patients={patients} />
@@ -84,7 +63,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       name: doctor?.name,
       avatar: doctor?.avatar_url,
       email: doctor?.email,
-      doctorAlerts: parseData(doctor?.doctorAlerts),
       patients: parseData(doctor?.patients),
     },
   }
